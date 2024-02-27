@@ -1,4 +1,7 @@
-import '../pages/index.css';
+import './pages/index.css';
+import {initialCards} from './cards.js';
+
+
 
 
 const cardList = document.querySelector(".places__list");
@@ -32,6 +35,9 @@ function deleteCard(event) {
 
 initialCards.forEach((item) => createCard(item.name, item.link));
 
+initialCards.forEach(function(item){
+  
+})
 // @todo: Темплейт карточки
 
 // @todo: DOM узлы
@@ -41,5 +47,5 @@ initialCards.forEach((item) => createCard(item.name, item.link));
 // @todo: Функция удаления карточки
 
 // @todo: Вывести карточки на страницу
-
+  
 
