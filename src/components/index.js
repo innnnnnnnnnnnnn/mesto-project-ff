@@ -1,24 +1,31 @@
-import "./pages/index.css";
-import { getCard } from "./components/card.js";
+import "../pages/index.css";
+import { getCard } from "./card.js";
 import { initialCards } from "./cards.js";
-import { deleteCard } from "./components/card.js";
-import { cardLike } from "./components/card.js";
-import { openPopup } from "./components/modal.js";
-import { closePopup } from "./components/modal.js";
+import { deleteCard } from "./card.js";
+import { cardLike } from "./card.js";
+import { openPopup } from "./modal.js";
+import { closePopup } from "./modal.js";
 
 const cardList = document.querySelector(".places__list");
 const profileEditButton = document.querySelector(".profile__edit-button");
 const popupTypeEdit = document.querySelector(".popup_type_edit");
-const poputNewCard = document.querySelector(".profile__add-button");
+const popupNewCard = document.querySelector(".profile__add-button");
 const popupTypeNewCard = document.querySelector(".popup_type_new-card");
 const popupTypeImage = document.querySelector(".popup_type_image");
+const popupOverviewImage = document.querySelector(".popup__image");
+const cardOverviewDesc = document.querySelector(".popup__caption");
+const formElementNewplace = document.querySelector("[name=new-place]");
+const inputPlaceName = document.querySelector("[name=place-name]");
+const inputLink = document.querySelector("[name=link]");
+const cardTitle = document.querySelector(".card__title");
+const cardImageForm = document.querySelector(".card__image");
 
 function createCard(name, link) {
   const item = {
     name,
     link,
   };
-  cardList.append(getCard(item, deleteCard, cardLike, OpenImageCard));
+  cardList.append(getCard(item, deleteCard, cardLike, OpenImage));
 }
 
 initialCards.forEach((item) => createCard(item.name, item.link));
@@ -29,14 +36,12 @@ profileEditButton.addEventListener("click", function () {
 });
 
 //открытие модал окно новая карточка
-poputNewCard.addEventListener("click", function () {
+popupNewCard.addEventListener("click", function () {
   openPopup(popupTypeNewCard);
 });
 
 //открытие картинки
-function OpenImageCard(evt) {
-  const popupOverviewImage = document.querySelector(".popup__image");
-  const cardOverviewDesc = document.querySelector(".popup__caption");
+function OpenImage(evt) {
   const image = evt.target;
   popupOverviewImage.src = image.src;
   cardOverviewDesc.textContent = image.alt;
@@ -62,11 +67,6 @@ function formSubmitProfile(evt) {
 formElementProfile.addEventListener("submit", formSubmitProfile);
 
 //Форма для добавления карточки
-const formElementNewplace = document.querySelector("[name=new-place]");
-const inputPlaceName = document.querySelector("[name=place-name]");
-const inputLink = document.querySelector("[name=link]");
-const cardTitle = document.querySelector(".card__title");
-const cardImageForm = document.querySelector(".card__image");
 
 function formSubmitNewPlace(evt) {
   evt.preventDefault(); // Эта строчка отменяет стандартную отправку формы
@@ -74,8 +74,8 @@ function formSubmitNewPlace(evt) {
   inputLink.value;
   cardTitle.textContent = inputPlaceName.value;
   cardImageForm.src = inputLink.value;
-  inputPlaceName.value = " ";
-  inputLink.value = " ";
+  inputPlaceName.value.reset();
+  inputLink.value.reset();
   closePopup(popupTypeNewCard);
 }
 
