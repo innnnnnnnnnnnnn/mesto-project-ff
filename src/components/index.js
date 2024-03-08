@@ -17,21 +17,32 @@ const cardOverviewDesc = document.querySelector(".popup__caption");
 const formElementNewplace = document.querySelector("[name=new-place]");
 const inputPlaceName = document.querySelector("[name=place-name]");
 const inputLink = document.querySelector("[name=link]");
-const cardTitle = document.querySelector(".card__title");
-const cardImageForm = document.querySelector(".card__image");
+const cardTitle = document.querySelectorAll(".card__title");
+const cardImageForm = document.querySelectorAll(".card__image");
+const formElementProfile = document.querySelector("[name=edit-profile]"); // Воспользуйтесь методом querySelector()
+const nameInput = document.querySelector("[name= name]"); // Воспользуйтесь инструментом .querySelector()
+const jobInput = document.querySelector("[name=description]"); // Воспользуйтесь инструментом .querySelector()
+const profileTitle = document.querySelector(".profile__title");
+const profileJob = document.querySelector(".profile__description");
+
+
+
+
 
 function createCard(name, link) {
   const item = {
     name,
     link,
   };
-  cardList.append(getCard(item, deleteCard, cardLike, OpenImage));
+  cardList.append(getCard(item, deleteCard, cardLike, openModalImage));
 }
 
 initialCards.forEach((item) => createCard(item.name, item.link));
 
 //Открытие модал окно редактировать профиль
 profileEditButton.addEventListener("click", function () {
+  nameInput.value= profileTitle.textContent
+  jobInput.value=profileJob.textContent
   openPopup(popupTypeEdit);
 });
 
@@ -41,45 +52,38 @@ popupNewCard.addEventListener("click", function () {
 });
 
 //открытие картинки
-function OpenImage(evt) {
+function openModalImage(evt) {
   const image = evt.target;
   popupOverviewImage.src = image.src;
+  popupOverviewImage.alt = image.alt;
   cardOverviewDesc.textContent = image.alt;
+
   openPopup(popupTypeImage);
 }
 
-// Находим форму в DOM
-const formElementProfile = document.querySelector("[name=edit-profile]"); // Воспользуйтесь методом querySelector()
-const nameInput = document.querySelector("[name= name]"); // Воспользуйтесь инструментом .querySelector()
-const jobInput = document.querySelector("[name=description]"); // Воспользуйтесь инструментом .querySelector()
-const profileTitle = document.querySelector(".profile__title");
-const profileJob = document.querySelector(".profile__description");
-
+function formSubmitNewPlace(evt) {
+  evt.preventDefault(); // Эта строчка отменяет стандартную отправку формы
+  cardImageForm.src = inputLink.value;
+  cardTitle.textContent = inputPlaceName.value;
+  const newCard= getCard({name:inputPlaceName.value, link:inputLink.value}, deleteCard,cardLike,openModalImage)
+ cardList.prepend(newCard)
+ formElementNewplace.reset();
+  closePopup(document.querySelector(".popup_type_new-card"));
+ 
+}
 // Обработчик «отправки» формы
 function formSubmitProfile(evt) {
   evt.preventDefault(); // Эта строчка отменяет стандартную отправку формы
-  nameInput.value;
-  jobInput.value;
   profileTitle.textContent = nameInput.value;
   profileJob.textContent = jobInput.value;
-}
-
-formElementProfile.addEventListener("submit", formSubmitProfile);
-
-//Форма для добавления карточки
-
-function formSubmitNewPlace(evt) {
-  evt.preventDefault(); // Эта строчка отменяет стандартную отправку формы
-  inputPlaceName.value;
-  inputLink.value;
-  cardTitle.textContent = inputPlaceName.value;
-  cardImageForm.src = inputLink.value;
-  inputPlaceName.value.reset();
-  inputLink.value.reset();
-  closePopup(popupTypeNewCard);
+  
+  closePopup(document.querySelector(".popup_type_edit"));
 }
 
 formElementNewplace.addEventListener("submit", formSubmitNewPlace);
+formElementProfile.addEventListener("submit", formSubmitProfile);
+
+//Форма для добавления карточки
 
 // @todo: Темплейт карточки
 

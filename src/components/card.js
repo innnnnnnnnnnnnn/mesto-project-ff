@@ -1,4 +1,4 @@
-export function getCard(item, deleteCard, cardLike, OpenImage) {
+export function getCard(item, deleteCard, cardLike, openModalImage) {
   const card = document.querySelector("#card-template").content;
   const cardElement = card.querySelector(".card").cloneNode(true);
   const cardImage = cardElement.querySelector(".card__image");
@@ -16,7 +16,7 @@ export function getCard(item, deleteCard, cardLike, OpenImage) {
     .addEventListener("click", cardLike);
   cardElement
     .querySelector(".card__image")
-    .addEventListener("click", OpenImage);
+    .addEventListener("click", openModalImage);
   return cardElement;
 }
 
