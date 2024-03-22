@@ -20,14 +20,11 @@ const inputLink = document.querySelector("[name=link]");
 const cardTitle = document.querySelectorAll(".card__title");
 const cardImageForm = document.querySelectorAll(".card__image");
 const formElementProfile = document.querySelector("[name=edit-profile]"); // Воспользуйтесь методом querySelector()
+const popupInput = document.querySelector(".popup__input");
 const nameInput = document.querySelector("[name= name]"); // Воспользуйтесь инструментом .querySelector()
 const jobInput = document.querySelector("[name=description]"); // Воспользуйтесь инструментом .querySelector()
 const profileTitle = document.querySelector(".profile__title");
 const profileJob = document.querySelector(".profile__description");
-
-
-
-
 
 function createCard(name, link) {
   const item = {
@@ -41,8 +38,8 @@ initialCards.forEach((item) => createCard(item.name, item.link));
 
 //Открытие модал окно редактировать профиль
 profileEditButton.addEventListener("click", function () {
-  nameInput.value= profileTitle.textContent
-  jobInput.value=profileJob.textContent
+  nameInput.value = profileTitle.textContent;
+  jobInput.value = profileJob.textContent;
   openPopup(popupTypeEdit);
 });
 
@@ -65,32 +62,94 @@ function formSubmitNewPlace(evt) {
   evt.preventDefault(); // Эта строчка отменяет стандартную отправку формы
   cardImageForm.src = inputLink.value;
   cardTitle.textContent = inputPlaceName.value;
-  const newCard= getCard({name:inputPlaceName.value, link:inputLink.value}, deleteCard,cardLike,openModalImage)
- cardList.prepend(newCard)
- formElementNewplace.reset();
+  const newCard = getCard(
+    { name: inputPlaceName.value, link: inputLink.value },
+    deleteCard,
+    cardLike,
+    openModalImage
+  );
+  cardList.prepend(newCard);
+  formElementNewplace.reset();
   closePopup(document.querySelector(".popup_type_new-card"));
- 
 }
 // Обработчик «отправки» формы
 function formSubmitProfile(evt) {
   evt.preventDefault(); // Эта строчка отменяет стандартную отправку формы
   profileTitle.textContent = nameInput.value;
   profileJob.textContent = jobInput.value;
-  
+
   closePopup(document.querySelector(".popup_type_edit"));
 }
 
 formElementNewplace.addEventListener("submit", formSubmitNewPlace);
 formElementProfile.addEventListener("submit", formSubmitProfile);
 
-//Форма для добавления карточки
+//добавляем атрибуты
+nameInput.setAttribute("minlength", 2);
+nameInput.setAttribute("maxlength", 40);
+jobInput.setAttribute("minlength", 2);
+jobInput.setAttribute("maxlength", 200);
 
-// @todo: Темплейт карточки
+formElementProfile.setAttribute("novalidate", "");
 
-// @todo: DOM узлы
+// Функция, которая добавляет класс с ошибкой
+const showInputError = (formElementProfile, popupInput, errorMessage) => {
+  const profileError = formElementProfile.querySelector(
+    `.${popupInput.id}-error`
+  );
+  console.log(profileError);
+  popupInput.classList.add("form__input_type_error");
+  profileError.textContent = errorMessage;
+  profileError.classList.add("profile_input-error_active");
+};
 
-// @todo: Функция создания карточки
+// Функция, которая удаляет класс с ошибкой
+const hideInputError = (formElementProfile, popupInput) => {
+  const profileError = formElementProfile.querySelector(
+    `.${popupInput.id}-error`
+  );
+  popupInput.classList.remove("form__input_type_error");
+  profileError.classList.remove("profile_input-error_active");
+  profileError.textContent = "";
+};
 
-// @todo: Функция удаления карточки
+// Функция, которая проверяет валидность поля
+const isValid = (formElementProfile, popupInput) => {
+  if (popupInput.validity.patternMismatch) {
+    // встроенный метод setCustomValidity принимает на вход строку
+    // и заменяет ею стандартное сообщение об ошибке
+    popupInput.setCustomValidity(popupInput.dataset.errorProfile);
+  } else {
+    // если передать пустую строку, то будут доступны
+    // стандартные браузерные сообщения
+    popupInput.setCustomValidity("");
+  }
+  //Браузерные сообщения об ошибке
+  if (!popupInput.validity.valid) {
+    showInputError(
+      formElementProfile,
+      popupInput,
+      popupInput.validationMessage
+    );
+  } else {
+    hideInputError(formElementProfile, popupInput);
+  }
+};
 
-// @todo: Вывести карточки на страницу
+popupInput.addEventListener("input", function () {
+  isValid(formElementProfile, popupInput);
+});
+
+//находим все поля формы
+const setEventListeners = (formElementProfile) => {
+  const inputList = Array.from(
+    formElementProfile.querySelectorAll(".popup__input")
+  );
+  console.log(inputList);
+  inputList.forEach((popupInput) => {
+    popupInput.addEventListener("input", () => {
+      isValid(formElementProfile, popupInput);
+    });
+  });
+};
+setEventListeners(formElementProfile);
