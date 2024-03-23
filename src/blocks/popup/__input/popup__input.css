@@ -16,16 +16,17 @@
 }
 
 /*сообщение об ошибки*/
-.profile_input-error {
+.form_input-error {
   font-size: 12px;
   color: red;
   opacity: 0;
 }
 
-.profile_input-error_active{
+.form_input-error_active{
   opacity: 1;
 
 }
+
 
 .popup__input:last-of-type {
   margin-bottom: 0;

@@ -4,6 +4,7 @@ export function openPopup(popup) {
   document.addEventListener("keydown", handleEscClose);
   popup.addEventListener("click", handleOverlayClose);
   popup.addEventListener("click", handleButtonClose);
+  
 }
 
 //функция закрытия попап
