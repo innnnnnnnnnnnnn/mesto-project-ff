@@ -5,3 +5,15 @@
   background: #fff;
   padding: 25px 20px;
 }
+
+.like_container{
+  display: flex;
+  flex-direction: column;
+align-items: center;
+}
+
+.like_account{
+width: 10px;
+height: 13px;
+
+}
