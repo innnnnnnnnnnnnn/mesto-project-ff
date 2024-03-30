@@ -2,7 +2,6 @@ import "../pages/index.css";
 import { getCard } from "./card.js";
 import { initialCards } from "./cards.js";
 import { deleteCard } from "./card.js";
-import { cardLike } from "./card.js";
 import { openPopup } from "./modal.js";
 import { closePopup } from "./modal.js";
 import {
@@ -15,6 +14,7 @@ import {
 import { addNewCard, userInformation } from "./api.js";
 import { getInitialCards } from "./api.js";
 import { newUserData } from "./api.js";
+import{countingLikes} from './card.js'
 
 
 //формы
@@ -37,7 +37,7 @@ const popupTypeNewCard = document.querySelector(".popup_type_new-card");
 const popupTypeImage = document.querySelector(".popup_type_image");
 const popupOverviewImage = document.querySelector(".popup__image");
 const cardOverviewDesc = document.querySelector(".popup__caption");
-let userId;
+
 const cardTitle = document.querySelectorAll(".card__title");
 const cardImageForm = document.querySelectorAll(".card__image");
 const profileTitle = document.querySelector(".profile__title");
@@ -78,30 +78,32 @@ function openModalImage(evt) {
 
   openPopup(popupTypeImage);
 }
-
 enableValidation(validationConfig);
 
+
+let userId='';
 //Устанавливаем значения соответствующим эл.стр
 function userInfo(user) {
   nameInput.textContent = user.name;
   jobInput.textContent = user.about;
   profileImage.style.backgroundImage = user.avatar;
-  
-  
+  userId = user._id;
+  console.log(userId);
 }
 
 
-
+function renderCard(cards, userId) {
+  cards.forEach((item) => {
+    const newCard = getCard(item, deleteCard, countingLikes, openModalImage, userId);
+    cardList.appendChild(newCard);
+    console.log(userId);
+  });
+}
 Promise.all([userInformation(), getInitialCards()])
   .then(([user, cards]) => {
-const userId = user._id;
     userInfo(user);
-    //renderCard(cards);
-cards.forEach((card) => {
-    const newCard = getCard(card, deleteCard, cardLike, openModalImage,userId,);
-    cardList.appendChild(newCard);
-}
-)})
+    renderCard(cards,userId);
+  })
   .catch((err) => {
     console.log("ошибка", err);
   });
@@ -130,16 +132,17 @@ function formAddNewCard(evt) {
   const name = inputPlaceName.value;
   const link = inputLink.value;
   return addNewCard({ name: name, link: link })
-    .then((card) => {
-      const ownerId = card.owner_id;
-      const newCard = getCard(//добавление карточки в начало
+    .then((item) => {
+      const newCard = getCard(
       { name: name, link: link },
-      card,
+      item,
       deleteCard,
-      cardLike,
+      countingLikes,
       openModalImage,
-      ownerId
+      userId,
+      
     );
+    console.log(userId);
     cardList.prepend(newCard);
       formElementNewplace.reset();
 closePopup(document.querySelector(".popup_type_new-card"));
