@@ -6,37 +6,34 @@ const config = {
   },
 };
 
+function checkResponse(res){
+
+    if (!res.ok) {
+      // если ошибка, отклоняем промис
+      return Promise.reject(`Ошибка: ${res.status}`);
+    }
+    return res.json();
+  
+}
 
 //Получение карточек страницы
 export const getInitialCards = () => {
   return fetch(`${config.baseUrl}/cards`, {
     headers: config.headers,
   })
-    .then((res) => {
-      if (!res.ok) {
-        // если ошибка, отклоняем промис
-        return Promise.reject(`Ошибка: ${res.status}`);
-      }
-      return res.json();
-    })
+    .then(res =>checkResponse(res))
     .catch((err) => {
       console.log(err);
     });
 };
 
 //Получение данных о пользователе
-export const userInformation = () => {
+export const informationUser = () => {
   return fetch(`${config.baseUrl}/users/me`, {
     method: "GET",
     headers: config.headers,
   })
-    .then((res) => {
-      if (!res.ok) {
-        // если ошибка, отклоняем промис
-        return Promise.reject(`Ошибка: ${res.status}`);
-      }
-      return res.json();
-    })
+  .then(res =>checkResponse(res))
 
     .catch((err) => {
       console.log(err);
@@ -53,13 +50,7 @@ export const newUserData = ({ name, about }) => {
 
     }),
   })
-    .then((res) => {
-      if (!res.ok) {
-        // если ошибка, отклоняем промис
-        return Promise.reject(`Ошибка: ${res.status}`);
-      }
-      return res.json();
-    })
+  .then(res =>checkResponse(res))
 
     .catch((err) => {
       console.log("ошибка запроса", err);
@@ -75,13 +66,7 @@ export const addNewCard = (name, link) => {
       link,
     }),
   })
-    .then((res) => {
-      if (!res.ok) {
-        // если ошибка, отклоняем промис
-        return Promise.reject(`Ошибка: ${res.status}`);
-      }
-      return res.json();
-    })
+  .then(res =>checkResponse(res))
     .catch((err) => {
       console.log("ошибка запроса", err);
     });
@@ -93,14 +78,7 @@ export const addLikeCard = (cardId) => {
     method: "PUT",
     headers: config.headers,
   })
-    .then((res) => {
-      if (!res.ok) {
-        // если ошибка, отклоняем промис
-        return Promise.reject(`Ошибка: ${res.status}`);
-      }
-      return res.json();
-
-    })
+  .then(res =>checkResponse(res))
     .catch((err) => {
       console.log("ошибка запроса", err)
     });
@@ -111,14 +89,7 @@ export const removeCardLike = (cardId) => {
     method: "DELETE",
     headers: config.headers,
   })
-    .then((res) => {
-      if (!res.ok) {
-        // если ошибка, отклоняем промис
-        return Promise.reject(`Ошибка: ${res.status}`);
-      }
-      return res.json();
-
-    })
+  .then(res =>checkResponse(res))
     .catch((err) => {
       console.log("ошибка запроса", err)
 
@@ -131,14 +102,7 @@ export const handleDeleteCard = (cardId) => {
     method: "DELETE",
     headers: config.headers,
   })
-    .then((res) => {
-      if (!res.ok) {
-        // если ошибка, отклоняем промис
-        return Promise.reject(`Ошибка: ${res.status}`);
-      }
-      return res.json();
-
-    })
+  .then(res =>checkResponse(res))
     .catch((err) => {
       console.log("ошибка удаления карточки", err);
     })
@@ -154,14 +118,7 @@ export const changeAvatar = ({ avatar }) => {
 
     }),
   })
-    .then((res) => {
-      if (!res.ok) {
-        // если ошибка, отклоняем промис
-        return Promise.reject(`Ошибка: ${res.status}`);
-      }
-      return res.json();
-
-    })
+  .then(res =>checkResponse(res))
     .catch((err) => {
 
       console.log(avatar, err);

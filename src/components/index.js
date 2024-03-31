@@ -11,7 +11,7 @@ import {
   validationConfig,
 } from "./validation.js";
 
-import { addNewCard, userInformation } from "./api.js";
+import { addNewCard, informationUser } from "./api.js";
 import { getInitialCards } from "./api.js";
 import { newUserData, changeAvatar } from "./api.js";
 import { countingLikes } from './card.js'
@@ -50,6 +50,7 @@ const popupOverviewImage = document.querySelector(".popup__image");
 //прочее
 const cardList = document.querySelector(".places__list");//ul
 const profileEditButton = document.querySelector(".profile__edit-button");
+//const popupButton = document.querySelector('popup__button')
 const cardOverviewDesc = document.querySelector(".popup__caption");
 
 
@@ -59,14 +60,16 @@ profileEditButton.addEventListener("click", function () {
   jobInput.value = profileJob.textContent;
   openPopup(popupTypeEdit);
   clearValidation(formElementProfile, validationConfig);
-  validity(inputElement);
+  validity(inputElement,validationConfig);
 });
 
 //откратие модального окна аватара
 profileImage.addEventListener('click', function () {
+  validity(inputElement,validationConfig)
+  formElementAvatar.reset()
+ clearValidation(formElementAvatar, validationConfig)
+  
   openPopup(popupAvatar)
-  clearValidation(formElementAvatar, validationConfig)
-  validity(inputAvatar)
 })
 
 //открытие модал окно новая карточка
@@ -90,7 +93,7 @@ enableValidation(validationConfig);
 
 
 //Устанавливаем значения соответствующим эл.стр
-function userInfo(user) {
+function infoUser(user) {
   nameInput.textContent = user.name;
   jobInput.textContent = user.about;
   profileImage.style.backgroundImage = `url(${user.avatar})`;
@@ -104,9 +107,9 @@ function renderCard(cards, userId) {//вывод карточек на стр
     cardList.appendChild(newCard);
   });
 }
-Promise.all([userInformation(), getInitialCards()])
+Promise.all([informationUser(), getInitialCards()])
   .then(([user, cards]) => {
-    userInfo(user);
+    infoUser(user);
     renderCard(cards, userId);
   })
   .catch((err) => {
@@ -159,6 +162,7 @@ function formAvatar(evt) {
     return changeAvatar({ avatar })
       .then((avatar) => {
         profileImage.setAttribute('style', `background-image: url('${avatar.avatar}')`);//Задаем div картинку 
+        formElementAvatar.reset();
         closePopup(document.querySelector(".popup_avatar"));
       })
   }

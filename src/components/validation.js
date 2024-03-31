@@ -1,14 +1,14 @@
 export const validationConfig = {
   formSelector: ".popup__form",
   inputSelector: ".popup__input",
-  submitButtonSelector: ".button",
+  submitButtonSelector: ".popup__button",
   inactiveButtonClass: "form__submit_inactive",
   inputErrorClass: "form__input_type_error",
   errorClass: "form_input-error_active",
 };
 
 // Функция, которая добавляет класс с ошибкой
-const profileInputError = (formElement, inputElement, validationConfig) => {
+const InputProfileError = (formElement, inputElement, validationConfig) => {
   const profileError = formElement.querySelector(`.${inputElement.id}-error`);
   inputElement.classList.add(validationConfig.inputErrorClass);
   profileError.textContent = inputElement.validationMessage;
@@ -16,7 +16,7 @@ const profileInputError = (formElement, inputElement, validationConfig) => {
 };
 
 // Функция, которая удаляет класс с ошибкой
-const profileHideInputError = (formElement, inputElement, validationConfig) => {
+const inputProfileError = (formElement, inputElement, validationConfig) => {
   const profileError = document.querySelector(`.${inputElement.id}-error`);
   profileError.textContent = "";
   inputElement.classList.remove(validationConfig.inputErrorClass);
@@ -36,14 +36,14 @@ const isValidProfile = (formElement, inputElement, validationConfig) => {
   }
   //Браузерные сообщения об ошибке
   if (!inputElement.validity.valid) {
-    profileInputError(
+    InputProfileError(
       formElement,
       inputElement,
       validationConfig,
       inputElement.validationMessage
     );
   } else {
-    profileHideInputError(formElement, inputElement, validationConfig);
+    inputProfileError(formElement, inputElement, validationConfig);
   }
 };
 
@@ -107,7 +107,7 @@ export const clearValidation = (formElement, validationConfig) => {
     validationConfig.submitButtonSelector
   );
   inputList.forEach((inputElement) => {
-    profileHideInputError(formElement, inputElement, validationConfig);
+    inputProfileError(formElement, inputElement, validationConfig);
     inputElement.textContent = "";
   });
 
@@ -115,11 +115,11 @@ export const clearValidation = (formElement, validationConfig) => {
 };
 
 //Повторная валидаця при открытии
-export function validity(inputElement) {
-  const popupButton = document.querySelector(".popup__button");
+export function validity(inputElement,validationConfig) {
+  const buttonElement = document.querySelector(validationConfig.submitButtonSelector)
   if (inputElement.value === validity.valid) {
-    popupButton.disabled = false;
-    popupButton.classList.remove(validationConfig.inactiveButtonClass);
+    buttonElement.disabled = false;
+    buttonElement.classList.remove(validationConfig.inactiveButtonClass);
   } else {
   }
 }
