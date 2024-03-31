@@ -115,8 +115,8 @@ export const clearValidation = (formElement, validationConfig) => {
 };
 
 //Повторная валидаця при открытии
-export function validity(inputElement,validationConfig) {
-  const buttonElement = document.querySelector(validationConfig.submitButtonSelector)
+export function validity(formElement, inputElement, validationConfig) {
+  const buttonElement = formElement.querySelector(validationConfig.submitButtonSelector)
   if (inputElement.value === validity.valid) {
     buttonElement.disabled = false;
     buttonElement.classList.remove(validationConfig.inactiveButtonClass);

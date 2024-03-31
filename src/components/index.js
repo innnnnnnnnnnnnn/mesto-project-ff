@@ -28,7 +28,7 @@ const cardImageForm = document.querySelectorAll(".card__image");
 const inputPlaceName = document.querySelector("[name=place-name]");
 const inputLink = document.querySelector("[name=link]");
 const nameInput = document.querySelector("[name= name]");
-const inputAvatar = document.querySelector('[name=avatar]')
+//const inputAvatar = document.querySelector('[name=avatar]')
 const inputElement = document.querySelectorAll(".popup__input");
 const jobInput = document.querySelector("[name=description]");
 //Значение полей
@@ -56,19 +56,20 @@ const cardOverviewDesc = document.querySelector(".popup__caption");
 
 //Открытие модал окно редактировать профиль
 profileEditButton.addEventListener("click", function () {
+  validity(formElementProfile,inputElement, validationConfig);
   nameInput.value = profileTitle.textContent;
   jobInput.value = profileJob.textContent;
-  openPopup(popupTypeEdit);
   clearValidation(formElementProfile, validationConfig);
-  validity(inputElement, validationConfig);
+  openPopup(popupTypeEdit);
+  
+  
 });
 
 //откратие модального окна аватара
 profileImage.addEventListener('click', function () {
-  validity(inputElement, validationConfig)
-  formElementAvatar.reset()
   clearValidation(formElementAvatar, validationConfig)
-
+  validity(formElementAvatar,inputElement, validationConfig)
+  formElementAvatar.reset()
   openPopup(popupAvatar)
 })
 
@@ -89,7 +90,7 @@ function openModalImage(evt) {
   openPopup(popupTypeImage);
 }
 enableValidation(validationConfig);
-newUserData
+
 
 
 //Устанавливаем значения соответствующим эл.стр
