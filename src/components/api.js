@@ -5,7 +5,7 @@ const config = {
     "Content-Type": "application/json",
   },
 };
- 
+
 
 //Получение карточек страницы
 export const getInitialCards = () => {
@@ -31,9 +31,11 @@ export const userInformation = () => {
     headers: config.headers,
   })
     .then((res) => {
-      if (res.ok) {
-        return res.json();
+      if (!res.ok) {
+        // если ошибка, отклоняем промис
+        return Promise.reject(`Ошибка: ${res.status}`);
       }
+      return res.json();
     })
 
     .catch((err) => {
@@ -41,18 +43,22 @@ export const userInformation = () => {
     });
 };
 
-export const newUserData = ( {name, about} ) => {
+export const newUserData = ({ name, about }) => {
   return fetch(`${config.baseUrl}/users/me`, {
     method: "PATCH",
     headers: config.headers,
     body: JSON.stringify({
       name,
       about,
-      
+
     }),
   })
     .then((res) => {
-      res.json();
+      if (!res.ok) {
+        // если ошибка, отклоняем промис
+        return Promise.reject(`Ошибка: ${res.status}`);
+      }
+      return res.json();
     })
 
     .catch((err) => {
@@ -60,7 +66,7 @@ export const newUserData = ( {name, about} ) => {
     });
 };
 //создать карточку
-export const addNewCard = ({name, link}) => {
+export const addNewCard = (name, link) => {
   return fetch(`${config.baseUrl}/cards`, {
     method: "POST",
     headers: config.headers,
@@ -70,7 +76,11 @@ export const addNewCard = ({name, link}) => {
     }),
   })
     .then((res) => {
-      return res.json;
+      if (!res.ok) {
+        // если ошибка, отклоняем промис
+        return Promise.reject(`Ошибка: ${res.status}`);
+      }
+      return res.json();
     })
     .catch((err) => {
       console.log("ошибка запроса", err);
@@ -78,52 +88,84 @@ export const addNewCard = ({name, link}) => {
 };
 
 //поставить лайк карточки
-export const addLikeCard = (cardId)=>{
-  return fetch(`${config.baseUrl}/cards/likes/${cardId}`,{
-    method:"PUT",
+export const addLikeCard = (cardId) => {
+  return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
+    method: "PUT",
     headers: config.headers,
   })
-  .then((res) => {
-    return res.json;
-    
-  })
-  .catch((err) => {
-    console.log("ошибка запроса", err)
-    
-  });
+    .then((res) => {
+      if (!res.ok) {
+        // если ошибка, отклоняем промис
+        return Promise.reject(`Ошибка: ${res.status}`);
+      }
+      return res.json();
+
+    })
+    .catch((err) => {
+      console.log("ошибка запроса", err)
+    });
 }
 //удаление лайка скарточки
-export const removeCardLike = (cardId)=>{
-  return fetch(`${config.baseUrl}/cards/likes/${cardId}`,{
-    method:"DELETE",
-    headers: config.headers,
-  })
-  .then((res) => {
-    console.log(cardId);
-    return res.json;
-    
-  })
-  .catch((err) => {
-    console.log("ошибка запроса", err)
-    
-  });
-}
-
-//удаление карточки
-export const handleDeleteCard = (cardId)=>{
-  return fetch(`${config.baseUrl}/cards/${cardId}`,{
+export const removeCardLike = (cardId) => {
+  return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
     method: "DELETE",
     headers: config.headers,
   })
-  .then((res)=>{
-    console.log(cardId);
-    return res.json;
-    
-  })
-  .catch((err)=>{
-   console.log("ошибка удаления карточки",err);
-  })
+    .then((res) => {
+      if (!res.ok) {
+        // если ошибка, отклоняем промис
+        return Promise.reject(`Ошибка: ${res.status}`);
+      }
+      return res.json();
+
+    })
+    .catch((err) => {
+      console.log("ошибка запроса", err)
+
+    });
 }
 
+//удаление карточки
+export const handleDeleteCard = (cardId) => {
+  return fetch(`${config.baseUrl}/cards/${cardId}`, {
+    method: "DELETE",
+    headers: config.headers,
+  })
+    .then((res) => {
+      if (!res.ok) {
+        // если ошибка, отклоняем промис
+        return Promise.reject(`Ошибка: ${res.status}`);
+      }
+      return res.json();
+
+    })
+    .catch((err) => {
+      console.log("ошибка удаления карточки", err);
+    })
+}
+
+//Получение аватара
+export const changeAvatar = ({ avatar }) => {
+  return fetch(`${config.baseUrl}/users/me/avatar`, {
+    method: "PATCH",
+    headers: config.headers,
+    body: JSON.stringify({
+      avatar,
+
+    }),
+  })
+    .then((res) => {
+      if (!res.ok) {
+        // если ошибка, отклоняем промис
+        return Promise.reject(`Ошибка: ${res.status}`);
+      }
+      return res.json();
+
+    })
+    .catch((err) => {
+
+      console.log(avatar, err);
+    });
+};
 
 
