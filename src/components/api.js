@@ -39,7 +39,7 @@ export const informationUser = () => {
       console.log(err);
     });
 };
-
+//Отредактированные данные пользователя
 export const newUserData = ({ name, about }) => {
   return fetch(`${config.baseUrl}/users/me`, {
     method: "PATCH",

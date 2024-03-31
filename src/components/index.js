@@ -60,15 +60,15 @@ profileEditButton.addEventListener("click", function () {
   jobInput.value = profileJob.textContent;
   openPopup(popupTypeEdit);
   clearValidation(formElementProfile, validationConfig);
-  validity(inputElement,validationConfig);
+  validity(inputElement, validationConfig);
 });
 
 //откратие модального окна аватара
 profileImage.addEventListener('click', function () {
-  validity(inputElement,validationConfig)
+  validity(inputElement, validationConfig)
   formElementAvatar.reset()
- clearValidation(formElementAvatar, validationConfig)
-  
+  clearValidation(formElementAvatar, validationConfig)
+
   openPopup(popupAvatar)
 })
 
@@ -89,7 +89,7 @@ function openModalImage(evt) {
   openPopup(popupTypeImage);
 }
 enableValidation(validationConfig);
-
+newUserData
 
 
 //Устанавливаем значения соответствующим эл.стр
@@ -119,12 +119,13 @@ Promise.all([informationUser(), getInitialCards()])
 // Обработчик «отправки» формы профиля
 function changesUserData(evt) {
   function makeRequest() {
-    profileTitle.textContent = nameInput.value;
-    profileJob.textContent = jobInput.value;
+
     const name = nameInput.value;
     const about = jobInput.value;
-    return newUserData({ name: name, about: about })
-      .then(() => {
+    return newUserData({ name, about })
+      .then((user) => {
+        profileTitle.textContent = user.name;
+        profileJob.textContent = user.about;
         closePopup(document.querySelector(".popup_type_edit"));
       })
   }
