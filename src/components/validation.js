@@ -8,7 +8,7 @@ export const validationConfig = {
 };
 
 // Функция, которая добавляет класс с ошибкой
-const InputProfileError = (formElement, inputElement, validationConfig) => {
+const addClassError = (formElement, inputElement, validationConfig) => {
   const profileError = formElement.querySelector(`.${inputElement.id}-error`);
   inputElement.classList.add(validationConfig.inputErrorClass);
   profileError.textContent = inputElement.validationMessage;
@@ -16,7 +16,7 @@ const InputProfileError = (formElement, inputElement, validationConfig) => {
 };
 
 // Функция, которая удаляет класс с ошибкой
-const inputProfileError = (formElement, inputElement, validationConfig) => {
+const removeClassError = (formElement, inputElement, validationConfig) => {
   const profileError = document.querySelector(`.${inputElement.id}-error`);
   profileError.textContent = "";
   inputElement.classList.remove(validationConfig.inputErrorClass);
@@ -36,14 +36,14 @@ const isValidProfile = (formElement, inputElement, validationConfig) => {
   }
   //Браузерные сообщения об ошибке
   if (!inputElement.validity.valid) {
-    InputProfileError(
+    addClassError(
       formElement,
       inputElement,
       validationConfig,
       inputElement.validationMessage
     );
   } else {
-    inputProfileError(formElement, inputElement, validationConfig);
+    removeClassError(formElement, inputElement, validationConfig);
   }
 };
 
@@ -58,7 +58,7 @@ const setEventListeners = (formElement, validationConfig) => {
   inputList.forEach((inputElement) => {
     inputElement.addEventListener("input", () => {
       isValidProfile(formElement, inputElement, validationConfig);
-      toggleButtonState(inputList, buttonElement, validationConfig);
+      checkToggleButton(inputList, buttonElement, validationConfig);
     });
   });
 };
@@ -76,7 +76,7 @@ export const hasInvalidInput = (inputList) => {
 };
 
 //функция отключения и включения кнопки
-const toggleButtonState = (inputList, buttonElement, validationConfig) => {
+const checkToggleButton = (inputList, buttonElement, validationConfig) => {
   // Если есть хотя бы один невалидный инпут
   if (hasInvalidInput(inputList)) {
     // сделай кнопку неактивной
@@ -107,11 +107,11 @@ export const clearValidation = (formElement, validationConfig) => {
     validationConfig.submitButtonSelector
   );
   inputList.forEach((inputElement) => {
-    inputProfileError(formElement, inputElement, validationConfig);
+    removeClassError(formElement, inputElement, validationConfig);
     inputElement.textContent = "";
   });
 
-  toggleButtonState(inputList, buttonElement, validationConfig);
+  checkToggleButton(inputList, buttonElement, validationConfig);
 };
 
 //Повторная валидаця при открытии

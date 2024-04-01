@@ -56,23 +56,23 @@ const cardOverviewDesc = document.querySelector(".popup__caption");
 
 //Открытие модал окно редактировать профиль
 profileEditButton.addEventListener("click", function () {
-  validity(formElementProfile,inputElement, validationConfig);
+  validity(formElementProfile, inputElement, validationConfig);
   nameInput.value = profileTitle.textContent;
   jobInput.value = profileJob.textContent;
-  
+
   clearValidation(formElementProfile, validationConfig);
   openPopup(popupTypeEdit);
-  
-  
+
+
 });
 
 //откратие модального окна аватара
 profileImage.addEventListener('click', function () {
-   validity(formElementAvatar,inputElement, validationConfig)
+  validity(formElementAvatar, inputElement, validationConfig)
   clearValidation(formElementAvatar, validationConfig)
   formElementAvatar.reset()
   openPopup(popupAvatar)
- 
+
 })
 
 //открытие модал окно новая карточка
@@ -96,7 +96,7 @@ enableValidation(validationConfig);
 
 
 //Устанавливаем значения соответствующим эл.стр
-function valueUserInfo(user) {
+function setValueElement(user) {
   profileTitle.textContent = user.name;
   profileJob.textContent = user.about;
   profileImage.style.backgroundImage = `url(${user.avatar})`;
@@ -112,7 +112,7 @@ function renderCard(cards, userId) {//вывод карточек на стр
 }
 Promise.all([getUserData(), getInitialCards()])
   .then(([user, cards]) => {
-    valueUserInfo(user);
+    setValueElement(user);
     renderCard(cards, userId);
   })
   .catch((err) => {
@@ -122,12 +122,12 @@ Promise.all([getUserData(), getInitialCards()])
 // Обработчик «отправки» формы профиля
 function changesUserData(evt) {
   function makeRequest() {
-    
+
     const name = nameInput.value;
     const about = jobInput.value;
-    return editUserData({ name:name, about:about})
+    return editUserData({ name: name, about: about })
       .then((user) => {
-        valueUserInfo(user)
+        setValueElement(user)
         profileTitle.textContent = user.name;
         profileJob.textContent = user.about;
         closePopup(popupTypeEdit);
