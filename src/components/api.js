@@ -28,7 +28,7 @@ export const getInitialCards = () => {
 };
 
 //Получение данных о пользователе
-export const informationUser = () => {
+export const getUserData = () => {
   return fetch(`${config.baseUrl}/users/me`, {
     method: "GET",
     headers: config.headers,
@@ -40,7 +40,7 @@ export const informationUser = () => {
     });
 };
 //Отредактированные данные пользователя
-export const newUserData = ({ name, about }) => {
+export const editUserData = ({ name, about }) => {
   return fetch(`${config.baseUrl}/users/me`, {
     method: "PATCH",
     headers: config.headers,
@@ -57,7 +57,7 @@ export const newUserData = ({ name, about }) => {
     });
 };
 //создать карточку
-export const addNewCard = (name, link) => {
+export const createNewCard = (name, link) => {
   return fetch(`${config.baseUrl}/cards`, {
     method: "POST",
     headers: config.headers,

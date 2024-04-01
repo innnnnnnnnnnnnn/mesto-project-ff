@@ -11,9 +11,9 @@ import {
   validationConfig,
 } from "./validation.js";
 
-import { addNewCard, informationUser } from "./api.js";
+import { createNewCard, getUserData } from "./api.js";
 import { getInitialCards } from "./api.js";
-import { newUserData, changeAvatar } from "./api.js";
+import { editUserData, changeAvatar } from "./api.js";
 import { countingLikes } from './card.js'
 
 
@@ -59,6 +59,7 @@ profileEditButton.addEventListener("click", function () {
   validity(formElementProfile,inputElement, validationConfig);
   nameInput.value = profileTitle.textContent;
   jobInput.value = profileJob.textContent;
+  
   clearValidation(formElementProfile, validationConfig);
   openPopup(popupTypeEdit);
   
@@ -67,10 +68,11 @@ profileEditButton.addEventListener("click", function () {
 
 //откратие модального окна аватара
 profileImage.addEventListener('click', function () {
+   validity(formElementAvatar,inputElement, validationConfig)
   clearValidation(formElementAvatar, validationConfig)
-  validity(formElementAvatar,inputElement, validationConfig)
   formElementAvatar.reset()
   openPopup(popupAvatar)
+ 
 })
 
 //открытие модал окно новая карточка
@@ -94,9 +96,9 @@ enableValidation(validationConfig);
 
 
 //Устанавливаем значения соответствующим эл.стр
-function infoUser(user) {
-  nameInput.textContent = user.name;
-  jobInput.textContent = user.about;
+function valueUserInfo(user) {
+  profileTitle.textContent = user.name;
+  profileJob.textContent = user.about;
   profileImage.style.backgroundImage = `url(${user.avatar})`;
   userId = user._id;
 }
@@ -108,9 +110,9 @@ function renderCard(cards, userId) {//вывод карточек на стр
     cardList.appendChild(newCard);
   });
 }
-Promise.all([informationUser(), getInitialCards()])
+Promise.all([getUserData(), getInitialCards()])
   .then(([user, cards]) => {
-    infoUser(user);
+    valueUserInfo(user);
     renderCard(cards, userId);
   })
   .catch((err) => {
@@ -120,26 +122,27 @@ Promise.all([informationUser(), getInitialCards()])
 // Обработчик «отправки» формы профиля
 function changesUserData(evt) {
   function makeRequest() {
-
+    
     const name = nameInput.value;
     const about = jobInput.value;
-    return newUserData({ name, about })
+    return editUserData({ name:name, about:about})
       .then((user) => {
+        valueUserInfo(user)
         profileTitle.textContent = user.name;
         profileJob.textContent = user.about;
-        closePopup(document.querySelector(".popup_type_edit"));
+        closePopup(popupTypeEdit);
       })
   }
   handleSubmitLoading(makeRequest, evt)//универсальная функция
 }
 
 //обработчик формы новая карточка
-function formAddNewCard(evt) {
+function handlerNewCardForm(evt) {
   function makeRequest() {
     cardImageForm.src = inputLink.value;
     cardTitle.textContent = inputPlaceName.value;
 
-    return addNewCard(inputPlaceName.value, inputLink.value)
+    return createNewCard(inputPlaceName.value, inputLink.value)
       .then((item) => {
         const newCard = getCard(//добавление карточки в начало
           item,
@@ -151,21 +154,21 @@ function formAddNewCard(evt) {
         );
         cardList.prepend(newCard);
         formElementNewplace.reset();
-        closePopup(document.querySelector(".popup_type_new-card"));
+        closePopup(popupTypeNewCard);
       })
   }
   handleSubmitLoading(makeRequest, evt)//универсальная функция
 }
 
 //смена профиля
-function formAvatar(evt) {
+function changeFormAvatar(evt) {
   function makeRequest() {
     const avatar = formElementAvatar.elements.avatar.value//достаем значение полей формы avatar-это поле input
     return changeAvatar({ avatar })
       .then((avatar) => {
         profileImage.setAttribute('style', `background-image: url('${avatar.avatar}')`);//Задаем div картинку 
         formElementAvatar.reset();
-        closePopup(document.querySelector(".popup_avatar"));
+        closePopup(popupAvatar);
       })
   }
   handleSubmitLoading(makeRequest, evt)//универсальная функция
@@ -204,7 +207,7 @@ function handleSubmitLoading(request, evt, loadingText = "Сохранение..
 }
 
 
-formElementNewplace.addEventListener("submit", formAddNewCard);
+formElementNewplace.addEventListener("submit", handlerNewCardForm);
 formElementProfile.addEventListener("submit", changesUserData);
-formElementAvatar.addEventListener('submit', formAvatar)
+formElementAvatar.addEventListener('submit', changeFormAvatar)
 
